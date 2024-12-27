@@ -222,7 +222,7 @@ def calc_ngrams(function, n, use_llil):
     if use_llil:
         # fetch llil opcodes sorted by the instructions' address
         opcodes_sorted = [get_opcode_from_llil(instruction) for instruction in sorted(
-            function.llil_instructions, key=lambda x: int(x.address))]
+            function.low_level_il.instructions, key=lambda x: int(x.address))]
     else:
         # fetch instruction opcodes sorted by the instructions' address
         opcodes_sorted = [get_opcode_from_disassembly(instruction) for instruction in sorted(
