@@ -1,29 +1,32 @@
 #!/usr/bin/python
 import glob
+import multiprocessing
 import sys
 from collections import Counter
 from pprint import pformat
-import multiprocessing
 
-from binaryninja import BinaryViewType
-
+import binaryninja
 from obfuscation_detection.utils import calc_global_ngrams
 
 
 def analyze(binary_file_path):
     print(f"Analyzing file {binary_file_path}.")
     # init binary ninja
-    bv = BinaryViewType.get_view_of_file(binary_file_path)
-    # wait until analysis finishes
-    bv.update_analysis_and_wait()
-    # count 3-grams
-    return calc_global_ngrams(bv, 3, use_llil=True)
+    with binaryninja.load(binary_file_path) as bv:
+        # wait until analysis finishes
+        bv.update_analysis_and_wait()
+        # count 3-grams
+        return calc_global_ngrams(bv, 3, use_llil=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # check file arguments
     if len(sys.argv) < 3:
-        print("[*] Syntax: {} <path to analysis directory> <output file>".format(sys.argv[0]))
+        print(
+            "[*] Syntax: {} <path to analysis directory> <output file>".format(
+                sys.argv[0]
+            )
+        )
         exit(0)
 
     # parse arguments
@@ -45,6 +48,6 @@ if __name__ == '__main__':
     output_string = pformat({k for k, v in ngrams.most_common(1000)})
 
     # write output file
-    with open(output_file_path, 'w') as output_file:
+    with open(output_file_path, "w") as output_file:
         output_file.write(output_string)
         output_file.close()

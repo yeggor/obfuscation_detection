@@ -1,9 +1,8 @@
 #!/usr/bin/python
 import sys
 
-from binaryninja import BinaryViewType
+import binaryninja
 from obfuscation_detection import detect_obfuscation
-
 
 # check file arguments
 if len(sys.argv) < 2:
@@ -14,9 +13,9 @@ if len(sys.argv) < 2:
 file_name = sys.argv[1]
 
 # init binary ninja
-bv = BinaryViewType.get_view_of_file(file_name)
-if not file_name.endswith(".bndb"):
-    bv.update_analysis_and_wait()
+with binaryninja.load(file_name) as bv:
+    if not file_name.endswith(".bndb"):
+        bv.update_analysis_and_wait()
 
-# look for obfuscation heuristics
-detect_obfuscation(bv)
+    # look for obfuscation heuristics
+    detect_obfuscation(bv)
