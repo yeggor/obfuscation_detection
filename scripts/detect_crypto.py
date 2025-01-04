@@ -17,5 +17,5 @@ with binaryninja.load(file_name) as bv:
     if not file_name.endswith(".bndb"):
         bv.update_analysis_and_wait()
 
-    # look for obfuscation heuristics
+    # look for cryptographic primitives
     detect_crypto(bv)
