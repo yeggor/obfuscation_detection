@@ -112,6 +112,11 @@ def detect_obfuscation(bv):
     find_complex_arithmetic_expressions(bv)
 
 
+def detect_crypto(bv):
+    # find rc4 implementations
+    find_rc4(bv)
+
+
 # utils
 
 
